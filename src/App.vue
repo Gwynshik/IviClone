@@ -1,23 +1,16 @@
 <template>
     <Header />
-    <Main v-bind:films="films"/>
+    <Main/>
     <div class="footer"></div>
 </template>
+
+
 
 <script>
     import Header from '@/components/Header.vue'
     import Main from '@/components/Main.vue'
     export default {
         name: 'iviClone',
-        data() {
-            return{
-                films: [
-                {id: 1, title: 'Мстители', genre: 'Фантастика'},
-                {id: 2, title: 'Аватар', genre: ['фантастика', 'боевик']},
-                {id: 3, title: 'Гарри Поттер', genre: ['фэнтези', 'приключения']},
-                ],
-            }
-        },
         components:{
             Header,
             Main

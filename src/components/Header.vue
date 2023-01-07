@@ -11,7 +11,7 @@
 
 <style>
     .header{
-        height: 50px;
+        height: 70px;
         display: flex;
         align-items: center;
         background-color: #e0552a;

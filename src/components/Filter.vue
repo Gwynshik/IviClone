@@ -5,11 +5,11 @@
                 <div class="filter__select-genre" @click="changeDisplayFilterDropdown">
                     <div class="filter__text-wrapper">
                         <span class="filter__title">Жанры</span>
-                        <span class="filter__select-genre-text"></span>
+                        <span class="filter__select-genre-text">{{ selectedGenresText }}</span>
                     </div>
                     <div class="filter__icon">v</div>
                 </div>
-                <div class="filter-dropdown">
+                <div class="filter-dropdown" :class="{'filter-dropdown_active': FilterDropdownIsActive}">
                     <!-- <div class="filter__dropdown-slider">
                         <div class="filter__slider-item">1</div>
                         <div class="filter__slider-item">2</div>
@@ -17,46 +17,95 @@
                         <div class="filter__slider-item">4</div>
                     </div> -->
                     <ul class="filter-dropdown__list">
-                        <FilterDropdownList v-for="genre of genres" :genre="genre" :films="films"/>
+                        <li v-for="genre of genres" class="filter-dropdown__item" >
+                            <label for="checkbox-genre" class="filter-dropdown__label" >
+                                <input type="checkbox" id="checkbox-genre" style="display: none">
+                                <div class="filter-dropdown__text" @click="selectGenre(genre)">{{ genre.title }}</div>
+                                <div class="filter-dropdown__checkbox-wrapper">
+                                    <div class="filter-dropdown__checkbox">
+                                        <img src="@/images/check-icon.svg" alt="checkbox" class="filter-dropdown__icon">
+                                    </div>
+                                </div>
+                            </label>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="filter__btn-reset" @click="resetFilters">Сбросить фильтры</div>
+        <div class="filter__btn-reset" @click="resetFilters()">Сбросить фильтры</div>
     </div>
 </template>
 
+
+
 <script>
-    import FilterDropdownList from '@/components/FilterDropdownList.vue'
     export default {
         props: ['films'],
         data() {
             return {
-                genres: ['Артхаус', 'Биография', 'Боевик', 'Вестерн', 'Военные', 'Детективы', 'Для детей', 'Документальные', 'Драма', 'Зарубежные', 
-                'Исторические', 'Катастрофы', 'Комедии', 'Криминал', 'Мелодрамы', 'Мистические', 'Музыкальные', 'По комиксам', 'Приключения', 'Русские',
-                'Семейные', 'Советские', 'Спорт', 'Триллеры', 'Ужасы', 'Фантастика', 'Фэнтези'],
+                genres: [
+                    {id:0,title:"Артхаус",selected:false},
+                    {id:1,title:"Биография",selected:false},
+                    {id:2,title:"Боевик",selected:false},
+                    {id:3,title:"Вестерн",selected:false},
+                    {id:4,title:"Военные",selected:false},
+                    {id:5,title:"Детективы",selected:false},
+                    {id:6,title:"Для детей",selected:false},
+                    {id:7,title:"Документальные",selected:false},
+                    {id:8,title:"Драма",selected:false},
+                    {id:9,title:"Зарубежные",selected:false},
+                    {id:10,title:"Исторические",selected:false},
+                    {id:11,title:"Катастрофы",selected:false},
+                    {id:12,title:"Комедии",selected:false},
+                    {id:13,title:"Криминал",selected:false},
+                    {id:14,title:"Мелодрамы",selected:false},
+                    {id:15,title:"Мистические",selected:false},
+                    {id:16,title:"Музыкальные",selected:false},
+                    {id:17,title:"По комиксам",selected:false},
+                    {id:18,title:"Приключения",selected:false},
+                    {id:19,title:"Русские",selected:false},
+                    {id:20,title:"Семейные",selected:false},
+                    {id:21,title:"Советские",selected:false},
+                    {id:22,title:"Спорт",selected:false},
+                    {id:23,title:"Триллеры",selected:false},
+                    {id:24,title:"Ужасы",selected:false},
+                    {id:25,title:"Фантастика",selected:false},
+                    {id:26,title:"Фэнтези",selected:false}
+                ],
                 countClick: 0,
+                FilterDropdownIsActive: false,
             }
         },
-        components:{
-            FilterDropdownList
+        computed:{
+            selectedGenres(){
+                return this.genres.filter(genre => genre.selected);
+            },
+            selectedGenresText(){
+                if (this.selectedGenres.map(genre => genre.title).join(', ').length > 15) {
+                    return this.selectedGenres.map(genre => genre.title).join(', ').slice(0, 14).concat('...')
+                }
+                return this.selectedGenres.map(genre => genre.title).join(', ')
+            }
         },
         methods: {
             changeDisplayFilterDropdown(){
-                const dropdownMenu = document.querySelector('.filter-dropdown')
-                this.countClick++;
-                if (this.countClick % 2) {
-                    dropdownMenu.classList.add('isActive')
-                }
-                else dropdownMenu.classList.remove('isActive')
+                this.FilterDropdownIsActive = !this.FilterDropdownIsActive
+            },
+            selectGenre(genre){
+                genre.selected = !genre.selected;
+                console.log(genre)
             },
             resetFilters() {
-                console.log('resetFilters', this.test)
-            }
+                for (let i = 0; i < this.genres.length; i++) {
+                    this.genres[i].selected = false
+                }
+            },
         }
     }
     
 </script>
+
+
 
 <style>
     .filter{
@@ -103,7 +152,7 @@
         border-radius: 5px;
         display: none;
     }
-    .isActive{
+    .filter-dropdown_active{
         display: block;
     }
     .filter-dropdown_slider{
@@ -116,31 +165,33 @@
         justify-content: space-between;
         gap: 7px;
     }
+    .filter-dropdown__item{
+        position: relative;
+        width: 30%;
+        list-style: none;
+    }
+    .filter-dropdown__label{
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+    }
+    .filter-dropdown__label:hover .filter-dropdown__icon{
+        opacity: 0.5;
+    }
+    .filter-dropdown__text{
+        width: 180px;
+        overflow: hidden;
+    }
+    .filter-dropdown__icon{
+        width: 24px;
+        opacity: 0;
+    }
+    .filter-dropdown__icon:active{
+        opacity: 1;
+    }
     .filter__btn-reset{
         position: absolute;
         bottom: 30px;
         cursor: pointer;
     }
 </style>
-
-<!-- export default {
-    name: 'App',
-    components:{
-      Post
-    },
-    data(){
-      return{
-        countPage: 0,
-        posts: []
-      }
-    },
-    methods: {
-      async load(){
-        this.countPage++;
-        console.log(this.countPage);
-        const loadedPost = await fetch(`https://jsonplaceholder.typicode.com/posts?_page=${this.countPage}_limit=12`).then(response => response.json());
-        console.log(loadedPost);
-        this.posts = this.posts.concat(loadedPost);
-      }
-    }
-  } -->
