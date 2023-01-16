@@ -20,12 +20,12 @@
                     </div> -->
                     <ul class="dropdown-menu__list">
                         <li v-for="genre of genres" class="dropdown-menu__item">
-                            <label for="checkbox-genre" class="dropdown-menu__label">
+                            <label for="checkbox-genre" class="dropdown-menu__label" @mouseover="upHere = true" @mouseleave="upHere = false">
                                 <input type="checkbox" id="checkbox-genre" style="display: none">
-                                <div class="dropdown-menu__text" @click="selectTitle(genre)">{{ genre.title }}</div>
+                                <div class="dropdown-menu__text" @click="selectGenre(genre)">{{ genre.title }}</div>
                                 <div class="dropdown-menu__checkbox-wrapper">
                                     <div class="dropdown-menu__checkbox">
-                                        <img src="@/images/check-icon.svg" alt="checkbox" class="dropdown-menu__icon" :class="{'dropdown-menu__icon_active': genre.selected}">
+                                        <img src="@/images/check-icon.svg" alt="checkbox" class="dropdown-menu__icon" :class="{'dropdown-menu__icon_active': genre.selected},{'dropdown-menu__icon_hover': upHere}">
                                     </div>
                                 </div>
                             </label>
@@ -54,7 +54,7 @@
                         <li v-for="country of country" class="dropdown-menu__item" >
                             <label for="checkbox-country" class="dropdown-menu__label">
                                 <input type="checkbox" id="checkbox-country" style="display: none">
-                                <div class="dropdown-menu__text" @click="selectTitle(country)">{{ country.title }}</div>
+                                <div class="dropdown-menu__text" @click="selectCountry(country)">{{ country.title }}</div>
                                 <div class="dropdown-menu__checkbox-wrapper">
                                     <div class="dropdown-menu__checkbox">
                                         <img src="@/images/check-icon.svg" alt="checkbox" class="dropdown-menu__icon" :class="{'dropdown-menu__icon_active': country.selected}">
@@ -78,9 +78,9 @@
                 <div class="dropdown-menu dropdown-menu-years" :class="{'dropdown-menu_active': dropdownMenuYearsIsActive}">
                     <ul class="dropdown-menu__list list-years">
                         <li v-for="years of years" class="dropdown-menu__item item-years" >
-                            <label for="radio-years" class="dropdown-menu__label" >
+                            <label for="radio-years" class="dropdown-menu__label">
                                 <input type="radio" id="radio-years" style="display: none">
-                                <div class="dropdown-menu__text" @click="selectYears(years)">{{ years.title }}</div>
+                                <div class="dropdown-menu__text" @click="selectYear(years)">{{ years.title }}</div>
                                 <div class="dropdown-radio-wrapper">
                                     <div class="dropdown-menu__radio">
                                         <img src="@/images/radio-icon.svg" alt="radio" class="dropdown-menu__icon" :class="{'dropdown-menu__icon_active': years.selected}">
@@ -100,7 +100,6 @@
 
 <script>
     export default {
-        props: ['films'],
         data() {
             return {
                 genres: [
@@ -193,6 +192,7 @@
                 dropdownMenuGenresIsActive: false,
                 dropdownMenuCountryIsActive: false,
                 dropdownMenuYearsIsActive: false,
+                upHere: false,
             }
         },
         computed:{
@@ -231,24 +231,33 @@
             changeDisplayDropdownMenuYears(){
                 this.dropdownMenuYearsIsActive = !this.dropdownMenuYearsIsActive
             },
-            selectTitle(title){
-                title.selected = !title.selected;
-                console.log(title)
+            selectGenre(genre){
+                genre.selected = !genre.selected;
+                this.$emit('select-genre', genre)
             },
-            selectYears(years){
-                if (years.selected) {
-                    years.selected = !years.selected
+            selectCountry(country){
+                country.selected = !country.selected;
+                this.$emit('select-country', country)
+            },
+            selectYear(year){
+                if (year.selected) {
+                    return year.selected = !year.selected
                 }
-                else { 
-                    for (let i = 0; i < this.years.length; i++) {
-                        this.years[i].selected = false
-                    }
-                    years.selected = !years.selected
+                for (let i = 0; i < this.years.length; i++) {
+                    this.years[i].selected = false
                 }
+                year.selected = !year.selected
+                this.$emit('select-year', year)
             },
             resetFilters() {
                 for (let i = 0; i < this.genres.length; i++) {
                     this.genres[i].selected = false
+                }
+                for (let i = 0; i < this.country.length; i++) {
+                    this.country[i].selected = false
+                }
+                for (let i = 0; i < this.years.length; i++) {
+                    this.years[i].selected = false
                 }
             },
         }
