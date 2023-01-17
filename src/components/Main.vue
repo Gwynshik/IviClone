@@ -14,6 +14,7 @@
 				<ul>
 					<li>{{ filteredFilmsText }}</li>
 				</ul>
+				{{ filteredFilms }}
 			</div>
 			<!-- <Catalog /> -->
 			<!-- <Slider /> -->
@@ -31,25 +32,34 @@
 		data() {
 			return{
 				films: [
-				{id: 0, title: 'Мстители', genresId: [25], countryId: [25], yearsId: [11, 12]},
-				{id: 1, title: 'Аватар', genresId: [2, 25], countryId: [25], yearsId: [13]},
-				{id: 2, title: 'Гарри Поттер', genresId: [26], countryId: [6], yearsId: [13]},
+				{id: 0, title: 'Мстители', genres: [25], country: [25], years: [11, 12]},
+				{id: 1, title: 'Аватар', genres: [2, 25], country: [25], years: [13]},
+				{id: 2, title: 'Гарри Поттер', genres: [26], country: [6], years: [13]},
 				],
 				filtersFilms: [],
+				workFilters: {
+					genres: [],
+					country: [],
+					years: [],
+				}
 			}
 		},
 		methods:{
 			selectGenre(genre){
-				if (this.filtersFilms.length == 0) {
-					return this.filtersFilms = this.films.filter(film => film.genresId == genre.id)
+				if (genre.selected) {
+					return this.workFilters.genres.push(genre)
 				}
-				this.filtersFilms = this.filtersFilms.filter(film => film.genresId == genre.id)
+				this.workFilters.genres = this.workFilters.genres.filter(item => item.id !== genre.id)
+				
 			},
 			selectCountry(country){
-				console.log('main', country)
+				if (country.selected) {
+					return this.workFilters.country.push(country)
+				}
+				this.workFilters.country = this.workFilters.country.filter(item => item.id !== country.id)
 			},
 			selectYaer(yaer){
-				console.log('main', yaer)
+				this.workFilters.years = yaer
 			},
 		},
 		components:{
@@ -64,6 +74,37 @@
 					return this.filtersFilms.map(film => film.title)
 				}
             },
+			filteredFilms(){
+				if (this.filtersFilms.length == 0) {
+					if (this.workFilters.genres.length > 0) {
+						for (let i = 0; i < this.workFilters.genres.length; i++) {
+							if (this.workFilters.genres[i]) {
+								
+							}
+						}
+					}
+					// return this.filtersFilms = this.films.filter(function(film){
+					// 	let result = []
+					// 	for (let i = 0; i < film.genres.length; i++) {
+					// 		if (film.genres[i] == this.workFilters.genres) {result.push(film)}
+					// 	}
+					// 	if (result.length) {return result}
+					// 	return
+					// })
+				}
+				// return this.filtersFilms = this.filtersFilms.filter(function(film){
+				// 	let result = []
+				// 	for (let i = 0; i < film.genres.length; i++) {
+				// 		if (film.genres[i] == genre.id) {
+				// 			result.push(film)
+				// 		}
+				// 	}
+				// 	if (result.length > 0) {
+				// 		return result
+				// 	}
+				// 	return
+				// })
+			}
 		}
 	}
 </script>
