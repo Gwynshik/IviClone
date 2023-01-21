@@ -14,7 +14,7 @@
 				<ul>
 					<li>{{ filteredFilmsText }}</li>
 				</ul>
-				{{ filteredFilms }}
+
 			</div>
 			<!-- <Catalog /> -->
 			<!-- <Slider /> -->
@@ -37,29 +37,33 @@
 				{id: 2, title: 'Гарри Поттер', genres: [26], country: [6], years: [13]},
 				],
 				filtersFilms: [],
-				workFilters: {
+				filters: {
 					genres: [],
 					country: [],
 					years: [],
-				}
+				},
+				countFilter: {
+					genres: 0,
+					country: 0,
+					years: [],
+				},
 			}
 		},
 		methods:{
 			selectGenre(genre){
 				if (genre.selected) {
-					return this.workFilters.genres.push(genre)
+					return this.filters.genres.push(genre)
 				}
-				this.workFilters.genres = this.workFilters.genres.filter(item => item.id !== genre.id)
-				
+				this.filters.genres = this.filters.genres.filter(item => item.id !== genre.id)
 			},
 			selectCountry(country){
 				if (country.selected) {
-					return this.workFilters.country.push(country)
+					return this.filters.country.push(country)
 				}
-				this.workFilters.country = this.workFilters.country.filter(item => item.id !== country.id)
+				this.filters.country = this.filters.country.filter(item => item.id !== country.id)
 			},
 			selectYaer(yaer){
-				this.workFilters.years = yaer
+				this.filters.years = yaer
 			},
 		},
 		components:{
@@ -69,41 +73,64 @@
 		},
 		computed:{
 			filteredFilmsText(){
+				console.log('----------------------', this.filteredFilms)
 				if (this.filtersFilms.length > 0) {
-					console.log(this.filtersFilms.map(film => film.title))
 					return this.filtersFilms.map(film => film.title)
 				}
             },
 			filteredFilms(){
-				if (this.filtersFilms.length == 0) {
-					if (this.workFilters.genres.length > 0) {
-						for (let i = 0; i < this.workFilters.genres.length; i++) {
-							if (this.workFilters.genres[i]) {
-								
-							}
-						}
-					}
-					// return this.filtersFilms = this.films.filter(function(film){
-					// 	let result = []
-					// 	for (let i = 0; i < film.genres.length; i++) {
-					// 		if (film.genres[i] == this.workFilters.genres) {result.push(film)}
-					// 	}
-					// 	if (result.length) {return result}
-					// 	return
-					// })
+				if (this.countFilter.genres > this.filters.genres.length || this.countFilter.country > this.filters.country.length || this.countFilter.years.id !== this.filters.years.id) {
+					this.filtersFilms = []
 				}
-				// return this.filtersFilms = this.filtersFilms.filter(function(film){
-				// 	let result = []
-				// 	for (let i = 0; i < film.genres.length; i++) {
-				// 		if (film.genres[i] == genre.id) {
-				// 			result.push(film)
-				// 		}
-				// 	}
-				// 	if (result.length > 0) {
-				// 		return result
-				// 	}
-				// 	return
-				// })
+				if (this.filtersFilms.length === 0) {
+					for (let i = 0; i < this.films.length; i++) {
+						this.filtersFilms.push(this.films[i])
+					}
+				}
+				for (let i = 0; i < this.filters.genres.length; i++) {
+					const filtersGenres = this.filters.genres[i].id
+					console.log('filtersGenres', filtersGenres)
+					this.filtersFilms = this.filtersFilms.filter(function(film){
+						let result = []
+						for (let i = 0; i < film.genres.length; i++) {
+							if (film.genres[i] == filtersGenres) {
+								result.push(film)
+							}	
+						}
+						if (result.length) {return result}
+						return
+					})
+				}
+				for (let i = 0; i < this.filters.country.length; i++) {
+					const filtersCountry = this.filters.country[i].id
+					this.filtersFilms = this.filtersFilms.filter(function(film){
+						let result = []
+						for (let i = 0; i < film.country.length; i++) {
+							if (film.country[i] == filtersCountry) {
+								result.push(film)
+							}	
+						}
+						if (result.length) {return result}
+						return
+					})
+				}
+				const filtersYears = this.filters.years	
+				if (filtersYears.length !== 0) {
+					this.filtersFilms = this.filtersFilms.filter(function(film){
+						let result = []
+						for (let i = 0; i < film.years.length; i++) {
+							if (film.years[i] == filtersYears.id) {
+								result.push(film)
+							}	
+						}
+						if (result.length) {return result}
+						return
+					})
+				}
+				this.countFilter.genres = this.filters.genres.length
+				this.countFilter.country = this.filters.country.length
+				this.countFilter.years.id = this.filters.years.id
+				return this.filtersFilms
 			}
 		}
 	}
