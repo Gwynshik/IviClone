@@ -20,12 +20,14 @@
                     </div> -->
                     <ul class="dropdown-menu__list">
                         <li v-for="genre of genres" class="dropdown-menu__item">
-                            <label for="checkbox-genre" class="dropdown-menu__label" @mouseover="upHere = true" @mouseleave="upHere = false">
+                            <label for="checkbox-genre" class="dropdown-menu__label" >
+                                <!-- @mouseover="upHere = true" @mouseleave="upHere = false" -->
                                 <input type="checkbox" id="checkbox-genre" style="display: none">
                                 <div class="dropdown-menu__text" @click="selectGenre(genre)">{{ genre.title }}</div>
                                 <div class="dropdown-menu__checkbox-wrapper">
                                     <div class="dropdown-menu__checkbox">
-                                        <img src="@/images/check-icon.svg" alt="checkbox" class="dropdown-menu__icon" :class="{'dropdown-menu__icon_active': genre.selected},{'dropdown-menu__icon_hover': upHere}">
+                                        <img src="@/images/check-icon.svg" alt="checkbox" class="dropdown-menu__icon" :class="{'dropdown-menu__icon_active': genre.selected}">
+                                        <!-- ,{'dropdown-menu__icon_hover': upHere} -->
                                     </div>
                                 </div>
                             </label>
@@ -92,7 +94,7 @@
                 </div>
             </div>
         </div>
-        <div class="filter__btn-reset" @click="resetFilters()">Сбросить фильтры</div>
+        <div class="filter__btn-reset" @click="resetFilter()">Сбросить фильтры</div>
     </div>
 </template>
 
@@ -249,7 +251,7 @@
                 year.selected = !year.selected
                 this.$emit('select-year', year)
             },
-            resetFilters() {
+            resetFilter() {
                 for (let i = 0; i < this.genres.length; i++) {
                     this.genres[i].selected = false
                 }
@@ -259,6 +261,7 @@
                 for (let i = 0; i < this.years.length; i++) {
                     this.years[i].selected = false
                 }
+                this.$emit('reset-filter')
             },
         }
     }

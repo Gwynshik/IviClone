@@ -72,9 +72,9 @@
     cursor: pointer;
     align-items: center;
 }
-/* .dropdown-menu__label:hover .dropdown-menu__icon{
+.dropdown-menu__label:hover .dropdown-menu__icon{
     opacity: 0.5;   
-} */
+}
 .dropdown-menu__text{
     width: 180px;
     overflow: hidden;
@@ -83,9 +83,9 @@
     width: 24px;
     opacity: 0;
 }
-.dropdown-menu__icon_hover{
+/* .dropdown-menu__icon_hover{
     opacity: 0.5;
-}
+} */
 .dropdown-menu__icon_active{
     opacity: 1;
 }

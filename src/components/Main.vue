@@ -9,6 +9,7 @@
 				@select-genre="selectGenre"
 				@select-country="selectCountry"
 				@select-year="selectYaer"
+				@reset-filter="resetFilter"
 			/>
 			<div>
 				<ul>
@@ -16,7 +17,7 @@
 				</ul>
 
 			</div>
-			<!-- <Catalog /> -->
+			<Catalog :films="filtersFilms"/>
 			<!-- <Slider /> -->
 		</div>
 	</div>
@@ -32,7 +33,7 @@
 		data() {
 			return{
 				films: [
-				{id: 0, title: 'Мстители', genres: [25], country: [25], years: [11, 12]},
+				{id: 0, title: 'Мстители', genres: [25], country: [25, 6], years: [11, 12]},
 				{id: 1, title: 'Аватар', genres: [2, 25], country: [25], years: [13]},
 				{id: 2, title: 'Гарри Поттер', genres: [26], country: [6], years: [13]},
 				],
@@ -65,6 +66,11 @@
 			selectYaer(yaer){
 				this.filters.years = yaer
 			},
+			resetFilter(){
+				this.filters.genres = []
+				this.filters.genres = []
+				this.filters.genres = []
+			}
 		},
 		components:{
 			Filter,
